@@ -358,33 +358,33 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
           </div>
         );
 
-case 'screenshot':
-  return (
-    <div className="text-center space-y-6">
-      <div className="p-6 bg-green-50 rounded-lg">
-        <CloudArrowUpIcon className="h-12 w-12 text-green-600 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
-          Upload Your Payment Screenshot
-        </h3>
-        <p className="text-gray-600 mb-4">
-          Please upload the payment confirmation screenshot to complete your order.
-        </p>
-        <div className="bg-white p-4 rounded-lg border">
-          <UploadDiv
-            fileName={null}
-            startUpload={startUpload}
-            onFileSelected={(fileExists) => setHasFile(fileExists)}
-            onStarting={(name) => console.log('Starting upload for', name)}
-            onUploadComplete={(result) => {
-              if (result) {
-                handleCompletePurchase(result.url)
-              }
-            }}
-          />
-        </div>
-      </div>
-    </div>
-  );
+      case 'screenshot':
+        return (
+          <div className="text-center space-y-6">
+            <div className="p-6 bg-green-50 rounded-lg">
+              <CloudArrowUpIcon className="h-12 w-12 text-green-600 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Upload Your Payment Screenshot
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Please upload the payment confirmation screenshot to complete your order.
+              </p>
+              <div className="bg-white p-4 rounded-lg border">
+                <UploadDiv
+                  fileName={null}
+                  startUpload={startUpload}
+                  onFileSelected={(fileExists) => setHasFile(fileExists)}
+                  onStarting={(name) => console.log('Starting upload for', name)}
+                  onUploadComplete={(result) => {
+                    if (result) {
+                      handleCompletePurchase(result.url)
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        );
 
 
 
@@ -481,12 +481,12 @@ case 'screenshot':
                 setStartUpload(true)
                 setUploading(true)
               }}
-              className={`px-4 py-2 rounded m-w-[50%] ${hasFile
-                ? 'bg-blue-600 text-white'
+              className={`flex-1 py-3 px-4 rounded-lg transition-colors duration-200 ${hasFile
+                ? 'bg-green-600 hover:bg-green-700'
                 : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                 }`}
             >
-              Start Upload
+              Complete Purchase
             </button>
             <button
               className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 px-4 rounded-lg transition-colors duration-200"
