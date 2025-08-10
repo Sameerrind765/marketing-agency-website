@@ -133,6 +133,22 @@ async function appendCustomerData(customerData: customerData) {
 }
 
 // Add this new endpoint after your existing endpoints
+app.get("/test", (req: Request, res: Response) => {
+  try {
+    res.status(201).json({
+      message: "Your Route Points to Marketing Site Backend",
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Server error",
+      success: false,
+    });
+  }
+});
+
+
 app.post("/send-form", async (req: Request, res: Response) => {
   const customerData: customerData = req.body;
   type Platform = "twitch" | "youtube" | "tiktok" | "kick";
@@ -417,7 +433,7 @@ app.post("/send-contact-form", async (req: Request, res: Response) => {
 
     await transporter.sendMail({
       from: `"Contact Form" <${process.env.EMAIL_USER}>`,
-      to: process.env.ADMIN,
+      to: process.env.EMAIL_RECEIVER,
       subject: `New Contact Form Submission - ${platform}`,
       text: `
             You have received a new contact form submission:
@@ -429,11 +445,11 @@ app.post("/send-contact-form", async (req: Request, res: Response) => {
             Message:
             ${message}
                   `,
-    });
+      });
 
     await transporter.sendMail({
-      from: `"Social Sphere" <${process.env.EMAIL_USER}>`,
-      to: email,
+      from: `"Your Company" <${process.env.EMAIL_USER}>`,
+      to: email, // user email
       subject: "We’ve received your message!",
       text: `
 Hi,

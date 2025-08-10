@@ -6,7 +6,11 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "types": ["node"]
+    "types": ["node"],
+    "outDir": "./dist", 
+    "rootDir": "./src", 
+    "resolveJsonModule": true
   },
-  "include": ["./**/*.ts", "./**/*.mts"]
+  "include": ["./**/*.ts", "./**/*.mts"],
+  "exclude": ["node_modules", "dist"]
 }
