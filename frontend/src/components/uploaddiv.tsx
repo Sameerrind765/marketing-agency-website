@@ -95,7 +95,7 @@ const FileUploadDiv: React.FC<Props> = ({ fileName, startUpload, onUploadComplet
                 ) : (
                     <>
                         <UploadIcon className="h-8 w-8 text-gray-400 mx-auto" />
-                        <span className='flex gap-1 justify-center'>
+                        <span className='flex gap-1 justify-center flex-col lg:flex-row'>
                             <p className="text-blue-600 hover:text-blue-700">Click to upload</p>
                             <p className="mb-2">or drag and drop</p>
                         </span>

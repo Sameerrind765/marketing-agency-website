@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import UploadDiv from './uploaddiv';
+import { CloudArrowUpIcon } from '@heroicons/react/24/outline';
 
 const baseUrl = "https://marketing-agency-website-backend-production.up.railway.app"
 
@@ -357,27 +358,34 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
           </div>
         );
 
-      case 'screenshot':
-        return (
-          <div className="space-y-6 relative">
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-gray-700">Payment Screenshot *</label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-2 text-center hover:border-gray-400 transition-colors">
-                <UploadDiv
-                  fileName={null}
-                  startUpload={startUpload}
-                  onFileSelected={(fileExists) => setHasFile(fileExists)} // ✅ listens to file selection
-                  onStarting={(name) => console.log('Starting upload for', name)}
-                  onUploadComplete={(result) => {
-                    if(result){
-                      handleCompletePurchase(result.url)
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        );
+case 'screenshot':
+  return (
+    <div className="text-center space-y-6">
+      <div className="p-6 bg-green-50 rounded-lg">
+        <CloudArrowUpIcon className="h-12 w-12 text-green-600 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          Upload Your Payment Screenshot
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Please upload the payment confirmation screenshot to complete your order.
+        </p>
+        <div className="bg-white p-4 rounded-lg border">
+          <UploadDiv
+            fileName={null}
+            startUpload={startUpload}
+            onFileSelected={(fileExists) => setHasFile(fileExists)}
+            onStarting={(name) => console.log('Starting upload for', name)}
+            onUploadComplete={(result) => {
+              if (result) {
+                handleCompletePurchase(result.url)
+              }
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+
 
 
       case 'complete':
@@ -469,7 +477,10 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
           <>
             <button
               disabled={!hasFile}
-              onClick={() => setStartUpload(true)}
+              onClick={() => {
+                setStartUpload(true)
+                setUploading(true)
+              }}
               className={`px-4 py-2 rounded m-w-[50%] ${hasFile
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-300 text-gray-600 cursor-not-allowed'
@@ -522,7 +533,7 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
         </div>
 
         {/* Content */}
-        <div className="py-3 px-7 pt-[19vh] lg:pt-[34vh]">
+        <div className="py-3 px-7">
           {/* Overlay loading spinner when uploading */}
           {uploading && (
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center rounded-lg z-10">
