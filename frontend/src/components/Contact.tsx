@@ -21,7 +21,7 @@ const Contact = () => {
     e.preventDefault();
     console.log("form Data:", formData);
     if(e){
-      await fetch("http://localhost:5000/send-contact-form",
+      await fetch("http://marketing-agency-website-backend.railway.internal/send-contact-form",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

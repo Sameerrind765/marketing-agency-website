@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import UploadDiv from './uploaddiv';
 
-const baseUrl = "http://localhost:5000"
+const baseUrl = "http://marketing-agency-website-backend.railway.internal"
 
 // Simple icon components
 const XIcon = ({ className }: { className?: string }) => (
