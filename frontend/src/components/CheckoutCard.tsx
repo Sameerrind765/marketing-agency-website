@@ -77,6 +77,7 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
   const [uploading, setUploading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
   const [startUpload, setStartUpload] = useState(false)
+  const [hasFile, setHasFile] = useState(false);
 
   const paymentMethods = [
     {
@@ -84,7 +85,7 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
       name: 'PayPal',
       description: 'Pay securely with your PayPal account',
       icon: '💳',
-      url: 'https://www.paypal.com/checkout'
+      url: 'https://paypal.me/saroshfarrukh'
     },
     {
       id: 'stripe',
@@ -136,21 +137,9 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
 
   const handlePaymentConfirm = () => {
     const selectedMethod = paymentMethods.find(method => method.id === selectedPaymentMethod);
-    const paymentUrl = `${selectedMethod?.url}?package=${packageTitle}&amount=${price}&platform=${platform}&method=${selectedPaymentMethod}`;
-
-    // In a real app, you'd redirect to the payment URL
-    // For demo purposes, we'll simulate the flow
-    alert(`Redirecting to ${selectedMethod?.name}: ${paymentUrl}\n\nClick OK to simulate returning from payment.`);
-
-    // Simulate returning from payment
+    const paymentUrl = selectedMethod?.url;
+    window.open(paymentUrl, '_blank');
     setStep('screenshot');
-  };
-
-  const handleFileUpload = (fileName: string) => {
-    setFormData({
-      ...formData,
-      screenshot: fileName
-    });
   };
 
   // async function test() {
@@ -375,11 +364,13 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
               <label className="block text-sm font-medium text-gray-700">Payment Screenshot *</label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-2 text-center hover:border-gray-400 transition-colors">
                 <UploadDiv
+                  fileName={null}
                   startUpload={startUpload}
+                  onFileSelected={(fileExists) => setHasFile(fileExists)} // ✅ listens to file selection
+                  onStarting={(name) => console.log('Starting upload for', name)}
                   onUploadComplete={(result) => {
-                    if (result) {
-                      handleCompletePurchase(result.fileName);
-                      handleFileUpload(result.fileName);
+                    if(result){
+                      handleCompletePurchase(result.url)
                     }
                   }}
                 />
@@ -477,14 +468,14 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
         return (
           <>
             <button
-              className={'flex-1 py-3 px-4 rounded-lg transition-colors duration-200 bg-green-600 hover:bg-green-700 text-white'
-              }
-              onClick={() => {
-                setStartUpload(true)
-                setUploading(true)
-              }}
+              disabled={!hasFile}
+              onClick={() => setStartUpload(true)}
+              className={`px-4 py-2 rounded m-w-[50%] ${hasFile
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                }`}
             >
-              Complete Purchase
+              Start Upload
             </button>
             <button
               className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 px-4 rounded-lg transition-colors duration-200"
@@ -518,11 +509,6 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
         {/* Header */}
         <div className="relative py-1 pt-4">
           <CloseButton />
-          <button onClick={() => {
-            setStartUpload(true)
-          }}>
-            dsajdksa
-          </button>
           <h2 className="text-xl text-center mb-4">Complete Your Order</h2>
           <div className="text-center">
             <span className="inline-block bg-gray-100 px-3 py-1 rounded-full text-sm mb-2">
@@ -536,13 +522,13 @@ export function CheckoutCard({ packageTitle, price, period, platform, show, onCl
         </div>
 
         {/* Content */}
-        <div className="py-3 px-7">
+        <div className="py-3 px-7 pt-[19vh] lg:pt-[34vh]">
           {/* Overlay loading spinner when uploading */}
-            {uploading && (
-              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center rounded-lg z-10">
-                <div className="h-12 w-12 border-4 border-green-300 border-t-green-600 rounded-full animate-spin"></div>
-              </div>
-            )}
+          {uploading && (
+            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center rounded-lg z-10">
+              <div className="h-12 w-12 border-4 border-green-300 border-t-green-600 rounded-full animate-spin"></div>
+            </div>
+          )}
           {renderStepContent()}
         </div>
 

@@ -4,14 +4,15 @@ type Props = {
     fileName?: string | null;
     startUpload: boolean;
     onUploadComplete: (result: { fileName: string; url: string } | null) => void;
+    onFileSelected: (hasFile: boolean) => void; // ✅ new
+    onStarting?: (fileName: string) => void;
 };
 
-const FileUploadDiv: React.FC<Props> = ({ fileName, startUpload, onUploadComplete }) => {
+const FileUploadDiv: React.FC<Props> = ({ fileName, startUpload, onUploadComplete, onFileSelected, onStarting }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [localFileName, setLocalFileName] = useState<string | null>(fileName || null);
     const [uploading, setUploading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     const UploadIcon = ({ className }: { className?: string }) => (
         <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,25 +24,30 @@ const FileUploadDiv: React.FC<Props> = ({ fileName, startUpload, onUploadComplet
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
-        if (!selectedFile) return;
+        if (!selectedFile) {
+            setFile(null);
+            setLocalFileName(null);
+            onFileSelected(false); // tell parent no file
+            return;
+        }
         setFile(selectedFile);
         setLocalFileName(selectedFile.name);
-        setError(null);
+        onFileSelected(true); // tell parent file exists
     };
 
     useEffect(() => {
         const triggerUpload = async () => {
             if (!startUpload || !file) return;
 
+            if (onStarting) onStarting(file.name);
+
             setUploading(true);
-            setError(null);
 
             const formData = new FormData();
             const publicId = `payment-confirmation-${Date.now()}`;
             formData.append('file', file);
             formData.append('upload_preset', 'ml_default');
             formData.append('public_id', publicId);
-            console.log(publicId)
 
             try {
                 const res = await fetch('https://api.cloudinary.com/v1_1/dzqtygtxd/image/upload', {
@@ -52,19 +58,16 @@ const FileUploadDiv: React.FC<Props> = ({ fileName, startUpload, onUploadComplet
                 const data = await res.json();
                 if (!res.ok) throw new Error(data?.error?.message || 'Upload failed');
 
-                // ✅ Return public_id and url to parent
                 onUploadComplete({
                     fileName: data.public_id,
                     url: data.secure_url
                 });
             } catch (err: any) {
-                setError(err.message || 'Upload failed');
                 onUploadComplete(null);
             } finally {
                 setUploading(false);
             }
         };
-
 
         triggerUpload();
     }, [startUpload]);
@@ -85,14 +88,15 @@ const FileUploadDiv: React.FC<Props> = ({ fileName, startUpload, onUploadComplet
                 {localFileName ? (
                     <>
                         <p className="text-green-600 font-semibold">{localFileName}</p>
-                        <p className="text-sm text-gray-500">✅ File selected, ready to upload</p>
+                        <p className="text-sm text-gray-500">
+                            {uploading ? '⏳ Uploading...' : '✅ File selected, ready to upload'}
+                        </p>
                     </>
                 ) : (
                     <>
                         <UploadIcon className="h-8 w-8 text-gray-400 mx-auto" />
                         <span className='flex gap-1 justify-center'>
-                            <p className="text-blue-600 hover:text-blue-700"
-                            >Click to upload</p>
+                            <p className="text-blue-600 hover:text-blue-700">Click to upload</p>
                             <p className="mb-2">or drag and drop</p>
                         </span>
                         <p className="text-sm">PNG, JPG up to 10MB</p>

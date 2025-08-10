@@ -6,6 +6,7 @@ import PricingSummary from './components/PricingSummary';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { Play, Users, TrendingUp } from 'lucide-react';
+import { BrowserRouter } from 'react-router-dom';
 
 function App() {
   const twitchPackages = [
@@ -196,52 +197,54 @@ function App() {
     <div className="min-h-screen">
       <Header />
       <Hero />
-      
-      <PlatformSection
-        id="twitch"
-        title="Twitch Services"
-        subtitle="Path-to-Affiliate → Path-to-Partner with proven strategies and live proof of results"
-        packages={twitchPackages}
-        bgColor="bg-gradient-to-br from-purple-900 to-purple-800"
-        accentColor="bg-purple-600"
-        icon={<Play className="h-8 w-8 text-white" />}
-      />
-      
-      <PlatformSection
-        id="youtube"
-        title="YouTube Services"
-        subtitle="Complete monetization funnel with branding, editing, and revenue optimization"
-        packages={youtubePackages}
-        bgColor="bg-gradient-to-br from-red-950 to-gray-900"
-        accentColor="bg-red-600"
-        icon={<Play className="h-8 w-8 text-white" />}
-      />
-      
-      <PlatformSection
-        id="tiktok"
-        title="TikTok Services"
-        subtitle="Follower guarantees, viral strategies, and professional video editing"
-        packages={tiktokPackages}
-        bgColor="bg-gradient-to-br from-black to-gray-900"
-        accentColor="bg-pink-600"
-        icon={<TrendingUp className="h-8 w-8 text-white" />}
-      />
-      
-      <PlatformSection
-        id="kick"
-        title="Kick Services"
-        subtitle="Specialized growth strategies for the fastest-growing streaming platform"
-        packages={kickPackages}
-        bgColor="bg-gradient-to-br from-black to-green-900"
-        accentColor="bg-green-600"
-        icon={<Users className="h-8 w-8 text-white" />}
-      />
-      
-      <Testimonials />
-      <div id="pricing">
-        <PricingSummary />
-      </div>
-      <Contact />
+      <BrowserRouter>
+        <PlatformSection
+          id="twitch"
+          title="Twitch Services"
+          subtitle="Path-to-Affiliate → Path-to-Partner with proven strategies and live proof of results"
+          packages={twitchPackages}
+          bgColor="bg-gradient-to-br from-purple-900 to-purple-800"
+          accentColor="bg-purple-600"
+          icon={<Play className="h-8 w-8 text-white" />}
+        />
+
+        <PlatformSection
+          id="youtube"
+          title="YouTube Services"
+          subtitle="Complete monetization funnel with branding, editing, and revenue optimization"
+          packages={youtubePackages}
+          bgColor="bg-gradient-to-br from-red-950 to-gray-900"
+          accentColor="bg-red-600"
+          icon={<Play className="h-8 w-8 text-white" />}
+        />
+
+        <PlatformSection
+          id="tiktok"
+          title="TikTok Services"
+          subtitle="Follower guarantees, viral strategies, and professional video editing"
+          packages={tiktokPackages}
+          bgColor="bg-gradient-to-br from-black to-gray-900"
+          accentColor="bg-pink-600"
+          icon={<TrendingUp className="h-8 w-8 text-white" />}
+        />
+
+        <PlatformSection
+          id="kick"
+          title="Kick Services"
+          subtitle="Specialized growth strategies for the fastest-growing streaming platform"
+          packages={kickPackages}
+          bgColor="bg-gradient-to-br from-black to-green-900"
+          accentColor="bg-green-600"
+          icon={<Users className="h-8 w-8 text-white" />}
+        />
+
+        <Testimonials />
+        <div id="pricing">
+          <PricingSummary />
+        </div>
+        <Contact />
+      </BrowserRouter>
+
       <Footer />
     </div>
   );
