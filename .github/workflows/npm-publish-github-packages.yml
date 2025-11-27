@@ -1,0 +1,44 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Setup Node.js version
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"   # speeds up installation
+
+      # 3. Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 4. Run tests (optional)
+      - name: Run Tests
+        run: npm test
+        if: ${{ always() }}
+
+      # 5. Build (if you have a build step)
+      - name: Build Project
+        run: npm run build
+        if: ${{ always() }}
+
+      # 6. Run Lint (optional)
+      - name: Lint
+        run: npm run lint
+        if: ${{ always() }}
+
+      # 7. (Optional) Deploy Step — tell me if you want Railway/Vercel/Render/Server deploy
