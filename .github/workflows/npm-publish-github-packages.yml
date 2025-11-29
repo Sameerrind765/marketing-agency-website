@@ -11,34 +11,60 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out the repository
+      # 1. Checkout repository
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # 2. Setup Node.js version
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache: "npm"   # speeds up installation
+          cache: npm
 
-      # 3. Install dependencies
-      - name: Install Dependencies
+      # ------------------------------------
+      # FRONTEND
+      # ------------------------------------
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
         run: npm install
 
-      # 4. Run tests (optional)
-      - name: Run Tests
+      - name: Build Frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      # ------------------------------------
+      # BACKEND
+      # ------------------------------------
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run Backend Tests
+        working-directory: ./backend
         run: npm test
         if: ${{ always() }}
 
-      # 5. Build (if you have a build step)
-      - name: Build Project
+      - name: Build Backend
+        working-directory: ./backend
         run: npm run build
         if: ${{ always() }}
 
-      # 6. Run Lint (optional)
-      - name: Lint
+      # ------------------------------------
+      # OPTIONAL LINT (both folders)
+      # ------------------------------------
+      - name: Lint Frontend
+        working-directory: ./frontend
         run: npm run lint
         if: ${{ always() }}
 
-      # 7. (Optional) Deploy Step — tell me if you want Railway/Vercel/Render/Server deploy
+      - name: Lint Backend
+        working-directory: ./backend
+        run: npm run lint
+        if: ${{ always() }}
+
+      # ------------------------------------
+      # DEPLOY (tell me which platform)
+      # ------------------------------------
+      # - name: Deploy to Railway / Vercel / Render / SSH
+      #   run: echo "Add deployment steps here"
