@@ -1,47 +1,50 @@
-name: Node.js CI
+name: Marketing Agency Website
 
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # FRONTEND Node Setup + Cache
-      - name: Setup Node.js for Frontend
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
-          cache: "npm"
-          cache-dependency-path: "frontend/package-lock.json"
+          node-version: 18
 
-      - name: Install Frontend Dependencies
+      - name: Install dependencies
         working-directory: frontend
         run: npm install
 
-      - name: Build Frontend
+      - name: Build project
         working-directory: frontend
         run: npm run build
 
-      # BACKEND Node Setup + Cache
-      - name: Setup Node.js for Backend
-        uses: actions/setup-node@v3
+      # Upload build output for deployment
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
         with:
-          node-version: "18"
-          cache: "npm"
-          cache-dependency-path: "backend/package-lock.json"
+          path: frontend/dist   # For React Vite
+          # path: frontend/build  # If using CRA
+          
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
 
-      - name: Install Backend Dependencies
-        working-directory: backend
-        run: npm install
+    permissions:
+      pages: write
+      id-token: write
 
-      - name: Build Backend
-        working-directory: backend
-        run: npm run build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
